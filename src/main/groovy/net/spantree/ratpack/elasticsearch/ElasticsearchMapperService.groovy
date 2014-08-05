@@ -1,12 +1,14 @@
 package net.spantree.ratpack.elasticsearch
 
 import com.google.inject.Inject
+import groovy.util.logging.Slf4j
 import org.elasticsearch.action.ActionResponse
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.client.Client
 import org.elasticsearch.client.IndicesAdminClient
 import org.elasticsearch.client.Requests
 
+@Slf4j
 class ElasticsearchMapperService {
     ElasticsearchClientService elasticsearchClientService
     ElasticsearchConfig elasticsearchConfig
@@ -26,18 +28,16 @@ class ElasticsearchMapperService {
     }
 
     boolean createIndex(String indexname) {
-        //TODO: add proper logging
-        println "Creating index $indexname"
-        def settings = elasticsearchConfig.indexSettings
+        log.info("Creating index $indexname")
+        def settings = elasticsearchConfig.props.indexSettings
         CreateIndexRequest req = Requests.createIndexRequest(indexname)
             .settings([analysis: settings])
         indices.create(req).get().acknowledged
     }
 
     boolean updateIndex(String indexname) {
-        //TODO: add proper logging
         assert indices.prepareClose(indexname).execute().get().acknowledged
-        def settings = elasticsearchConfig.indexSettings
+        def settings = elasticsearchConfig.props.indexSettings
         assert indices.prepareUpdateSettings(indexname)
             .setSettings([analysis: settings])
             .execute().get().acknowledged
@@ -46,7 +46,6 @@ class ElasticsearchMapperService {
     }
 
     ActionResponse deleteIndex(String indexname) {
-        //TODO: add proper logging
         if(elasticsearchClientService.indexExists(indexname)) {
             indices.prepareDelete(indexname).setListenerThreaded(false).execute().actionGet()
         }

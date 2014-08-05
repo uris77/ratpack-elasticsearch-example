@@ -16,6 +16,7 @@ class ElasticsearchModule extends AbstractModule {
         bind(ElasticsearchConfig.class).toInstance(new ElasticsearchConfig(this.cfg))
         bind(ElasticsearchClientService.class).in(Scopes.SINGLETON)
         bind(ElasticsearchMapperService.class).in(Scopes.SINGLETON)
+        bind(ElasticsearchIndexingService).in(Scopes.SINGLETON)
     }
 
 }

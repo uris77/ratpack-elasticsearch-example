@@ -1,3 +1,4 @@
+import net.spantree.ratpack.elasticsearch.ElasticsearchIndexingService
 import net.spantree.ratpack.elasticsearch.ElasticsearchModule
 
 import static ratpack.groovy.Groovy.groovyTemplate
@@ -7,13 +8,18 @@ ratpack {
 
     bindings {
         add new ElasticsearchModule(new File("./config", "EsConfig.groovy"))
+
+        init { ElasticsearchIndexingService elasticsearchIndexingService ->
+            elasticsearchIndexingService.init()
+        }
+
     }
 
     handlers {
-    get {
-      render groovyTemplate("index.html", title: "My Ratpack App")
-    }
+        get {
+          render groovyTemplate("index.html", title: "My Ratpack App")
+        }
 
-    assets "public"
+        assets "public"
     }
 }

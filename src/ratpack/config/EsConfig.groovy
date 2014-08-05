@@ -97,4 +97,8 @@ elasticsearch {
             }
         }
     }
+    cluster {
+        name = "elasticsearch_rguerra"
+        hosts = ['localhost:9300']
+    }
 }
